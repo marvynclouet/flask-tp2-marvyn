@@ -1,0 +1,13 @@
+Date       : 2026-04-16
+Auteur     : Marvyn Clouet
+Repo       : https://github.com/marvynclouet/flask-tp2-marvyn
+Branche    : fix/update-dependencies
+Description: TP2 DevSecOps - Pipeline CI/CD sécurisée pour une application Flask vulnérable.
+             Mise en place d'un pipeline GitHub Actions couvrant :
+               - SAST (Semgrep)
+               - Secrets scanning (Gitleaks)
+               - Lint Dockerfile (Hadolint)
+               - SCA filesystem (Trivy fs)
+               - Image scanning (Trivy image)
+             Objectif : détecter et corriger les vulnérabilités (dépendances, Dockerfile, code)
+             avant la mise en production.

@@ -1,0 +1,7 @@
+cc0afbc Update security.yml
+f319415 Update security.yml
+91914f2 Update security.yml
+d06baaa fix: Dockerfile best practices for Hadolint
+e64dd41 fix: update dependencies to non-vulnerable versions
+058070b Add security pipeline — SAST, SCA, image scan, secrets, lint
+76b35c1 Initial vulnerable Flask app for TP2

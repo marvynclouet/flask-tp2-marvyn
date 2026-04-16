@@ -1,6 +1,10 @@
 name: security
 on: [push, pull_request]
 
+permissions:
+  security-events: write
+  contents: read
+
 jobs:
   sast:
     name: SAST — Semgrep
@@ -10,11 +14,6 @@ jobs:
       - uses: returntocorp/semgrep-action@v1
         with:
           config: p/python
-          generateSarif: "1"
-      - uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: semgrep.sarif
-        if: always()
 
   secrets:
     name: Secrets — Gitleaks
@@ -43,7 +42,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Trivy fs scan
-        uses: aquasecurity/trivy-action@0.20.0
+        uses: aquasecurity/trivy-action@master
         with:
           scan-type: fs
           scan-ref: .
@@ -51,7 +50,7 @@ jobs:
           exit-code: 1
           format: sarif
           output: trivy_fs.sarif
-      - uses: github/codeql-action/upload-sarif@v3
+      - uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy_fs.sarif
         if: always()
@@ -64,14 +63,14 @@ jobs:
       - name: Build image
         run: docker build -t flask-tp2:${{ github.sha }} .
       - name: Trivy image scan
-        uses: aquasecurity/trivy-action@0.20.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: flask-tp2:${{ github.sha }}
           severity: CRITICAL
           exit-code: 1
           format: sarif
           output: trivy_image.sarif
-      - uses: github/codeql-action/upload-sarif@v3
+      - uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy_image.sarif
         if: always()

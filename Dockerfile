@@ -1,6 +1,7 @@
-FROM python:3.9
-ADD . /app
+FROM python:3.9-slim
+COPY app/ /app/
 WORKDIR /app
-RUN pip install -r app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 5000
-CMD python app/app.py
+USER nobody
+CMD ["python", "app.py"]

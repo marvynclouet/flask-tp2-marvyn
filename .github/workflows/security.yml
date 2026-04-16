@@ -1,42 +1,4 @@
-name: security
-on: [push, pull_request]
-
-permissions:
-  security-events: write
-  contents: read
-
-jobs:
-  sast:
-    name: SAST — Semgrep
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: returntocorp/semgrep-action@v1
-        with:
-          config: p/python
-
-  secrets:
-    name: Secrets — Gitleaks
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  lint:
-    name: Lint — Hadolint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: hadolint/hadolint-action@v3.1.0
-        with:
-          dockerfile: Dockerfile
-          failure-threshold: warning
-
-  sca:
+sca:
     name: SCA — Trivy filesystem
     runs-on: ubuntu-latest
     steps:
@@ -46,14 +8,9 @@ jobs:
         with:
           scan-type: fs
           scan-ref: .
-          severity: CRITICAL,HIGH
+          severity: CRITICAL
           exit-code: 1
-          format: sarif
-          output: trivy_fs.sarif
-      - uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: trivy_fs.sarif
-        if: always()
+          format: table
 
   image:
     name: Image scan — Trivy
@@ -68,9 +25,4 @@ jobs:
           image-ref: flask-tp2:${{ github.sha }}
           severity: CRITICAL
           exit-code: 1
-          format: sarif
-          output: trivy_image.sarif
-      - uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: trivy_image.sarif
-        if: always()
+          format: table

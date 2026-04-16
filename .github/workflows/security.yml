@@ -1,0 +1,7 @@
+name: security
+on: [push, pull_request]
+jobs:
+  todo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "À compléter pendant le TP"
